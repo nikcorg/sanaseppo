@@ -108,7 +108,7 @@ func run(argv []string) error {
 	return nil
 }
 
-func initDict(a alphabet.Alphabet) (*dict.Dict, error) {
+func initDict(a *alphabet.Alphabet) (*dict.Dict, error) {
 	var r io.Reader = strings.NewReader(wordList)
 
 	if wl, ok := os.LookupEnv(envOverrideDict); ok {
@@ -124,5 +124,5 @@ func initDict(a alphabet.Alphabet) (*dict.Dict, error) {
 
 	d, err := dict.New(r, a)
 
-	return &d, err
+	return d, err
 }

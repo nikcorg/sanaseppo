@@ -22,7 +22,7 @@ type Dict struct {
 	prefixCounts map[string]map[int]int
 }
 
-func New(wordlist io.Reader, wm WordMatcher) (Dict, error) {
+func New(wordlist io.Reader, wm WordMatcher) (*Dict, error) {
 	d := Dict{
 		words:        []string{},
 		prefixes:     map[string]int{},
@@ -31,7 +31,7 @@ func New(wordlist io.Reader, wm WordMatcher) (Dict, error) {
 
 	err := d.readDict(wordlist, wm)
 
-	return d, err
+	return &d, err
 }
 
 func (d Dict) String() string {

@@ -14,8 +14,8 @@ type Alphabet struct {
 	excl    *regexp.Regexp
 }
 
-func New(centre string, letters []string) Alphabet {
-	return Alphabet{
+func New(centre string, letters []string) *Alphabet {
+	return &Alphabet{
 		size:    len(letters) + 1,
 		letters: letters,
 		centre:  centre,
