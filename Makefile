@@ -6,7 +6,7 @@ WORDLIST := data/sanalista.txt
 .PHONY: build wordlist
 
 build:
-	go build -o "bin/$(BINARY_NAME)" -ldflags "-X 'main.binaryName=$(BINARY_NAME)'" *.go
+	go build -o "bin/$(BINARY_NAME)" -ldflags "-s -X 'main.binaryName=$(BINARY_NAME)'" *.go
 
 wordlist: export temp=$(mktemp)
 wordlist:
