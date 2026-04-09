@@ -12,16 +12,19 @@ import (
 
 const prefixSize = 2
 
+// WordMatcher is for filtering the dictionary input.
 type WordMatcher interface {
 	Matches(w string) bool
 }
 
+// Dict represents a set of words matching a filter
 type Dict struct {
 	words        []string
 	prefixes     map[string]int
 	prefixCounts map[string]map[int]int
 }
 
+// New returns a pointed `Dict`, initialised to the wordlist input filtered using the `WordMatcher`.
 func New(wordlist io.Reader, wm WordMatcher) (*Dict, error) {
 	d := Dict{
 		words:        []string{},
@@ -38,27 +41,33 @@ func (d Dict) String() string {
 	return fmt.Sprintf("Dict{size: %d, prefixes: %s}", len(d.words), strings.Join(getSortedKeys(d.prefixes), ", "))
 }
 
+// Size returns the number of words in the dictionary.
 func (d Dict) Size() int {
 	return len(d.words)
 }
 
+// MatchedWordes returns all matched words as an unsorted slice.
 func (d Dict) MatchedWords() []string {
 	return d.words
 }
 
+// Prefixes returns the prefixes for the matched words as a sorted slice.
 func (d Dict) Prefixes() []string {
 	return getSortedKeys(d.prefixes)
 }
 
+// PrefixMatches returns the number of matched words for the prefix.
 func (d Dict) PrefixMatches(pfx string) int {
 	return d.prefixes[pfx]
 }
 
-func (d Dict) WordLengths(pfx string) [][]int {
-	counts := [][]int{}
+// WordLengths returns a slice of `{a, b int}` "tuples", where `a` is the word length and `b` is
+// the number of matched words for the prefix.
+func (d Dict) WordLengths(pfx string) [][2]int {
+	counts := [][2]int{}
 
 	for _, l := range getSortedKeys(d.prefixCounts[pfx]) {
-		counts = append(counts, []int{l, d.prefixCounts[pfx][l]})
+		counts = append(counts, [2]int{l, d.prefixCounts[pfx][l]})
 	}
 
 	return counts
@@ -87,12 +96,11 @@ func (d *Dict) append(w string) {
 
 	d.prefixes[wpfx]++
 
-	runeCount := utf8.RuneCountInString(w)
-
 	if _, ok := d.prefixCounts[wpfx]; !ok {
 		d.prefixCounts[wpfx] = map[int]int{}
 	}
 
+	runeCount := utf8.RuneCountInString(w)
 	d.prefixCounts[wpfx][runeCount]++
 }
 

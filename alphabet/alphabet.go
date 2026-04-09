@@ -14,6 +14,8 @@ type Alphabet struct {
 	excl    *regexp.Regexp
 }
 
+// New returns a pointed `Alphabet`, initialised to `center` + `letters`. The `letters` input
+// should exclude `centre`.
 func New(centre string, letters []string) *Alphabet {
 	return &Alphabet{
 		size:    len(letters) + 1,
@@ -27,10 +29,13 @@ func (a Alphabet) String() string {
 	return fmt.Sprintf("Alphabet{centre: %s, letters: %s}", a.centre, strings.Join(a.letters, ""))
 }
 
+// Matches tests a word againt the configured alphabet
 func (a Alphabet) Matches(word string) bool {
 	return !a.excl.MatchString(word) && strings.Contains(word, a.centre)
 }
 
+// IsPangram tests whether a word is a pangram or a perfect pangram, returning the result as two
+// booleans (pangram, perfect pangram).
 func (a Alphabet) IsPangram(word string) (bool, bool) {
 	rc := utf8.RuneCountInString(word)
 
